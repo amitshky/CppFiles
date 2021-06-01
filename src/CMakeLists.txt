@@ -1,0 +1,1 @@
+add_executable("${PROJECT_NAME}" Multithreading/main_threads_cherno.cpp)

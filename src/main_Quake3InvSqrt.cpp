@@ -2,6 +2,8 @@
 #include <cmath>
 #include <bitset>
 
+#include "utils/timer.h"
+
 float QInvSqrt(float number)
 {
 	int32_t i;
@@ -27,6 +29,15 @@ int main()
 	//		  << std::bitset<32>(0x5f3759df) << '\n';
 
 	float num = 256;
-	std::cout << "QSqrt = " << QInvSqrt(num) << '\n'
-			  << "Sqrt  = " << 1.0f / std::sqrt(num) << '\n';
+	float qSqrt, sqrt;
+	{
+		Timer t;
+		qSqrt = QInvSqrt(num);
+	}
+	{
+		Timer t;
+		sqrt  = 1.0f / std::sqrt(num);
+	}
+	std::cout << "QSqrt = " << qSqrt << '\n'
+			  << "Sqrt  = " << sqrt << '\n';
 }

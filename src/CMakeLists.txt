@@ -1,1 +1,1 @@
-add_executable("${PROJECT_NAME}" Multithreading/main_threads_cherno.cpp)
+add_executable("${PROJECT_NAME}" main_Quake3InvSqrt.cpp)

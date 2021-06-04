@@ -1,5 +1,5 @@
 @echo off
 
 cd build-win/
-cmake --build .
+cmake --build . --config Debug
 cd ..

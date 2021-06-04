@@ -1,13 +1,27 @@
 cmake_minimum_required(VERSION 3.16)
 
-if(UNIX AND NOT APPLE)
-	set(LINUX TRUE)
-endif()
-
 project(cppFiles)
+
+set(CMAKE_CXX_STANDARD 17)
+
+if (NOT CMAKE_BUILD_TYPE) # build type defaulted to release of not specified
+	set(CMAKE_BUILD_TYPE Release)
+endif()
 
 add_subdirectory(src)
 
-if (LINUX)
-	target_link_libraries("${PROJECT_NAME}" PUBLIC pthread)
+if (MSVC)
+	target_compile_options("${PROJECT_NAME}" PUBLIC "/Wall")
+
+elseif(GNU)
+	set(GCC_COMPILE_OPTIONS "-Wall;-Wextra")
+	set(GCC_COMPILE_OPTIONS_DEBUG "-g")
+	set(GCC_COMPILE_OPTIONS_RELEASE "-O3")
+
+	target_compile_options("${PROJECT_NAME}" PUBLIC ${GCC_COMPILE_OPTIONS})
+	target_compile_options("${PROJECT_NAME}" PUBLIC $<CONFIG:Debug>:${GCC_COMPILE_OPTIONS}>)
+	target_compile_options("${PROJECT_NAME}" PUBLIC $<CONFIG:Release>:${GCC_COMPILE_OPTIONS}>)
+
+	target_link_libraries("${PROJECT_NAME}" PUBLIC pthreads)
+	
 endif()

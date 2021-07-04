@@ -14,13 +14,13 @@ if (MSVC)
 	target_compile_options("${PROJECT_NAME}" PUBLIC "/Wall")
 
 elseif(GNU)
-	set(GCC_COMPILE_OPTIONS "-Wall;-Wextra")
+	set(GCC_COMPILE_OPTIONS "-Wall;-Wextra;")
 	set(GCC_COMPILE_OPTIONS_DEBUG "-g")
 	set(GCC_COMPILE_OPTIONS_RELEASE "-O3")
 
 	target_compile_options("${PROJECT_NAME}" PUBLIC ${GCC_COMPILE_OPTIONS})
-	target_compile_options("${PROJECT_NAME}" PUBLIC $<CONFIG:Debug>:${GCC_COMPILE_OPTIONS}>)
-	target_compile_options("${PROJECT_NAME}" PUBLIC $<CONFIG:Release>:${GCC_COMPILE_OPTIONS}>)
+	target_compile_options("${PROJECT_NAME}" PUBLIC $<CONFIG:Debug>:${GCC_COMPILE_OPTIONS_DEBUG}>)
+	target_compile_options("${PROJECT_NAME}" PUBLIC $<CONFIG:Release>:${GCC_COMPILE_OPTIONS_RELEASE}>)
 
 	target_link_libraries("${PROJECT_NAME}" PUBLIC pthreads)
 	

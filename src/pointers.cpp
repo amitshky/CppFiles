@@ -3,35 +3,45 @@
 #include <vector>
 
 // to run specific sections of the code 
-#define PTR_BASICS   1
-#define STACK_HEAP   0
-#define POLYMORPHS   0
-#define VECTOR_PTR   0
-#define PTR_PASSING  0
+#define PTR_BASICS       0
+#define STACK_HEAP       1
+#define POLYMORPHS       0
+#define VECTOR_PTR       0
+#define PTR_PASSING      0
+#define CUS_SMART_PTR    0 // custom smart pointer
 
 
 static size_t totalAlloc = 0;
 static size_t totalFreed = 0;
 
-void* operator new(size_t bytes)
+void* operator new(size_t sz)
 {
 	//puts("@@@@ allocated mem @@@@");
-	totalAlloc += bytes;
-	return malloc(bytes);
+	if (sz == 0)
+		sz++; // avoid std::malloc(0) which may return nullptr on success
+
+	totalAlloc += sz;
+
+	if (void* ptr = std::malloc(sz))
+		return ptr;
+	
+	throw std::bad_alloc{}; // required by [new.delete.single]/3
 }
 
-void operator delete(void* mem, size_t bytes)
+void operator delete(void* mem, size_t sz)
 {
 	//puts("#### deallocated mem ####");
-	totalFreed += bytes;
-	free(mem);
+	totalFreed += sz;
+	std::free(mem);
+	//::operator delete(mem);
 }
 
-void operator delete[](void* mem, size_t bytes)
+void operator delete[](void* mem, size_t sz)
 {
 	//puts("#### deallocated mem ####");
-	totalFreed += bytes;
-	free(mem);
+	totalFreed += sz;
+	std::free(mem);
+	//::operator delete(mem);
 }
 
 void MemUsage()
@@ -195,6 +205,36 @@ void RefPtr(Data*& data) // here `data` cannot be NULL
 }
 #endif
 
+#if CUS_SMART_PTR
+
+template<typename T>
+class AutoPtr
+{
+public:
+	AutoPtr(T* ptr = nullptr) : m_Ptr(ptr) {}
+	~AutoPtr() { delete m_Ptr; }
+
+	inline T* operator-> () const { return  m_Ptr; }
+	inline T& operator*  () const { return *m_Ptr; }
+
+private:
+	T* m_Ptr;
+};
+
+class SomeClass
+{
+public:
+	SomeClass()  { std::cout << "SomeClass created\n";   }
+	~SomeClass() { std::cout << "SomeClass destroyed\n"; }
+
+	inline uint64_t GetMax() const { return m_Max; } 
+
+private:
+	uint64_t m_Max = ~0ULL;
+};
+
+#endif
+
 
 int main()
 {
@@ -282,6 +322,15 @@ int main()
 		//AccessShPtr(shData);
 		//shData->PrintData("Outside");
 	}
+#endif
+
+#if CUS_SMART_PTR
+
+	{
+		AutoPtr<SomeClass> ptr(new SomeClass());
+		std::cout << std::hex << ptr->GetMax() << '\n';
+	}
+
 #endif
 
 	MemUsage();

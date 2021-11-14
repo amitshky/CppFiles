@@ -70,6 +70,7 @@ int main()
 
 	books.emplace(Book(2006, "some book"));
 	books.emplace_hint(books.begin(), 2007, "someother book");
+	books.erase(Book(2006, "some book"));
 
 	for (auto& b : books)
 		std::cout << b << '\n';

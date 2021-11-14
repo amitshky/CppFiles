@@ -1,4 +1,4 @@
 add_executable(
-	"${PROJECT_NAME}"
+	${PROJECT_NAME}
 	stl/set.cpp
 )

@@ -75,6 +75,7 @@ int main()
 	for (auto& b : books)
 		std::cout << b << '\n';
 
+	// accessing elements
 	Book agot(1996, "A Game of Thrones");
 	if (books.find(agot) != books.end())
 		std::cout << "Book found\n";

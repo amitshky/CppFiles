@@ -39,31 +39,6 @@
 #include <string>
 #include <vector>
 
-
-class Account
-{
-public:
-	Account(const std::string& username)
-		: username(username), userID(Account::s_UserID++) {}
-
-	inline bool operator< (const Account& other) const { return username < other.username; }
-	inline bool operator> (const Account& other) const { return username > other.username; }
-
-	friend std::ostream& operator<< (std::ostream& stream, const Account& account)
-	{
-		stream << '[' << account.userID << "]: " << account.username;
-		return stream;
-	}
-
-public:
-	static uint32_t s_UserID;
-	std::string username;
-	uint32_t userID;
-};
-
-uint32_t Account::s_UserID = 0;
-
-
 int main()
 {
 	// initializing

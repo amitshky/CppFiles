@@ -1,5 +1,5 @@
 /**
- * std::unordered_map<KeyType, ValueType, Compare>
+ * std::unordered_map<KeyType, ValueType, Hash>
  * 
  * 1. Associative container that contains key-value pairs with unique keys
  * 2. Search, insertion, and removal have constant time complexity
@@ -37,7 +37,38 @@
 #include <iostream>
 #include <unordered_map>
 #include <string>
-#include <vector>
+
+
+class Account
+{
+public:
+	Account(const std::string& username)
+		: username(username), userID(Account::s_UserID++) {}
+
+	// overloading for custom hash function
+	inline bool operator== (const Account& other) const { return userID == other.userID; }
+
+	friend std::ostream& operator<< (std::ostream& stream, const Account& account)
+	{
+		stream << '[' << account.userID << "]: " << account.username;
+		return stream;
+	}
+
+public:
+	static uint32_t s_UserID;
+	std::string username;
+	uint32_t userID;
+};
+
+uint32_t Account::s_UserID = 0;
+
+// custom hash function template for user-defined types
+class AccountHashFunc
+{
+public:
+	inline size_t operator() (const Account& account) const { return account.userID; }
+};
+
 
 int main()
 {
@@ -69,5 +100,17 @@ int main()
 	// output is not sorted
 	std::cout << "elements in umap:\n";
 	for (auto& [key, value] : umap) // C++17
+		std::cout << key << ": " << value << '\n';
+
+	
+	std::cout << "\n----------\nstd::unordered_map for user-defined type:\n";
+	std::unordered_map<Account, int32_t, AccountHashFunc> accountList = {
+		{ Account("user1"), 1 },
+		{ Account("user2"), 2 },
+		{ Account("user3"), 3 }
+	};
+
+	std::cout << "elements in accountList:\n";
+	for (auto& [key, value] : accountList) // C++17
 		std::cout << key << ": " << value << '\n';
 }

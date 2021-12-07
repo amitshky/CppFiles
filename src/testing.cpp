@@ -1,10 +1,12 @@
 #include <iostream>
-#include <vector>
+#include <bitset>
 
 int main()
 {
-	constexpr int32_t edge = 6;
-	std::vector<std::vector<int32_t>> binaryTree;
+	float num = -1.1f;
+	long bits = *(long*)&num;
+	std::cout << std::bitset<32>(bits) << '\n';
 
-	binaryTree.reserve(edge);
+	float num2 = *(float*)&bits;
+	std::cout << num2 << '\n';
 }

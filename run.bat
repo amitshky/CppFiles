@@ -1,5 +1,2 @@
 @echo off
-
-cd build-win/
-src\Debug\cppFiles
-cd ..
+.\build-win\src\Debug\cppFiles.exe

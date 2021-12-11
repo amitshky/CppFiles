@@ -1,4 +1,8 @@
 /**
+ * References:
+ * https://embeddedbits.org/finding-memory-bugs-with-addresssanitizer/
+ * https://docs.microsoft.com/en-us/cpp/sanitizers/asan-error-examples?view=msvc-170
+ * 
  * Address Sanitizer
  * Address Sanitizer detects memory corruption bugs such as buffer overflows or accesses to a dangling pointer
  * 
@@ -34,9 +38,6 @@
 #define ALLOCATION_SIZE_TOO_BIG  0
 #define CALLOC_OVERFLOW          0
 #define NEW_DELETE_TYPE_MISMATCH 0
-
-//#if NEW_DELETE_TYPE_MISMATCH
-//#endif
 
 #if NEW_DELETE_TYPE_MISMATCH
 class Base

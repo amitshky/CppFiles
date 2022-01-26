@@ -20,8 +20,21 @@ endif()
 
 add_subdirectory(src)
 
+add_library(
+	hashlib
+	externals/hash-library/sha1.cpp 
+	externals/hash-library/sha1.h
+)
+
+target_include_directories(${PROJECT_NAME} PUBLIC externals/)
+
+target_link_libraries(
+	${PROJECT_NAME}
+	hashlib
+)
+
 if(MSVC)
-	target_compile_options(${PROJECT_NAME} PUBLIC "/W3;")
+	target_compile_options(${PROJECT_NAME} PUBLIC "/W4;")
 
 elseif(GNU)
 	set(GCC_COMPILE_OPTIONS "-Wall;-Wextra;")

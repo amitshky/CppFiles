@@ -5,17 +5,19 @@
  * - consists of starting point and a tick rate
  * - now() => time passed since starting point
  * - system_clock => time as held by the system
- * - stable_clock => monotonic
- * - high_resolution_clock => returns precise time as possible
+ * - stable_clock => monotonic (won't move forward or backward due to NTP or Daylight savings, etc. so its not synchronized with NTP server)
+ * - high_resolution_clock => returns as precise time as possible
  * clock returns a timepoint from which we extract information
  * 
  * Timepoint
- * - duration since the start of the epoch of the clock (Unix epoch is the de facto standard)
+ * - duration since the start of the epoch of the clock (Unix epoch is the de facto standard (at least for system_clock))
  * 
  * Durations
- * - comprises of a ratio and number of ticks
+ * - comprises of a ratio (1:1000 for milliseconds) and number of ticks
  * - duration object expresses a time span by means of a count and a period
- * - std::duration_cast<>
+ * - this is more like actual durations (seconds, minutes, etc.)
+ * - you can cast values to more precise types
+ * - std::chrono::duration_cast<>
  */
 
 #include <iostream>
@@ -52,7 +54,7 @@ int main()
 			  << nanosec.count()  << "ns\n\n";
 
 	// Explicit casting
-	std::chrono::seconds sec(2400);
+	std::chrono::seconds sec{2400};
 	std::chrono::minutes min = std::chrono::duration_cast<std::chrono::minutes>(sec);
 	std::cout << min.count() << "min\n";
 

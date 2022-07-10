@@ -3,15 +3,12 @@ cmake_minimum_required(VERSION 3.16)
 project(cppFiles LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG_MODE") # defining macro for debug mode
+
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU") # if(GNU) doesn't work here for some reason
 	# Enable Address Sanitizer for GCC
 	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address")
 	set(CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS_DEBUG} -fsanitize=address")
-endif()
-
-
-if(NOT CMAKE_BUILD_TYPE) # build type defaulted to release of not specified
-	set(CMAKE_BUILD_TYPE Release)
 endif()
 
 if(UNIX AND NOT APPLE)
@@ -22,11 +19,11 @@ add_subdirectory(src)
 
 add_library(
 	hashlib
-	externals/hash-library/sha1.cpp 
-	externals/hash-library/sha1.h
+	lib/hash-library/sha1.cpp 
+	lib/hash-library/sha1.h
 )
 
-target_include_directories(${PROJECT_NAME} PUBLIC externals/)
+target_include_directories(${PROJECT_NAME} PUBLIC lib/)
 
 target_link_libraries(
 	${PROJECT_NAME}
@@ -34,6 +31,7 @@ target_link_libraries(
 )
 
 if(MSVC)
+	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG};/fsanitize=address;")
 	target_compile_options(${PROJECT_NAME} PUBLIC "/W4;")
 
 elseif(GNU)

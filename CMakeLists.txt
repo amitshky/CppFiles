@@ -23,7 +23,11 @@ add_library(
 	lib/hash-library/sha1.h
 )
 
-target_include_directories(${PROJECT_NAME} PUBLIC lib/)
+target_include_directories(
+	${PROJECT_NAME} 
+	PUBLIC 
+	lib/
+)
 
 target_link_libraries(
 	${PROJECT_NAME}

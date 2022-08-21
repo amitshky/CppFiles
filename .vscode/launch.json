@@ -9,12 +9,37 @@
 			"type": "cppvsdbg",
 			"request": "launch",
 			"preLaunchTask": "Build-Debug",
-			"program": "${workspaceFolder}/build-win/src/Debug/cppFiles.exe",
+			"program": "${workspaceFolder}/build/src/Debug/cppFiles.exe",
 			"args": [],
 			"stopAtEntry": false,
 			"cwd": "${workspaceFolder}",
 			"environment": [],
-			"console": "externalTerminal"
+			"console": "newExternalWindow"
+		},
+		// Clang
+		{
+			"name": "(Clang) Debug",
+			"type": "cppvsdbg",
+			"request": "launch",
+			"preLaunchTask": "Build-Clang-Debug",
+			"program": "${workspaceFolder}/build/src/cppFiles.exe",
+			"args": [],
+			"stopAtEntry": false,
+			"cwd": "${workspaceFolder}",
+			"environment": [],
+			"console": "newExternalWindow"
+		},
+		{
+			"name": "(Clang) Release",
+			"type": "cppvsdbg",
+			"request": "launch",
+			"preLaunchTask": "Build-Clang-Release",
+			"program": "${workspaceFolder}/build/src/cppFiles.exe",
+			"args": [],
+			"stopAtEntry": false,
+			"cwd": "${workspaceFolder}",
+			"environment": [],
+			"console": "newExternalWindow"
 		},
 		//{
 		//	"name": "CMake Tools",

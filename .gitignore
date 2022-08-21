@@ -66,6 +66,8 @@ compile_commands.json
 CTestTestfile.cmake
 _deps
 
+# clangd cache
+.cache/
 
 # local files
 build/

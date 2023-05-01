@@ -48,7 +48,7 @@ elseif(GNU OR Clang)
 	target_compile_options(${PROJECT_NAME} PUBLIC $<CONFIG:Release>:${GCC_CLANG_COMPILE_OPTIONS_RELEASE})
 
 	if (LINUX)
-		target_link_libraries(${PROJECT_NAME} PUBLIC pthreads)
+		target_link_libraries(${PROJECT_NAME} pthreads)
 	endif()
 	
 endif()

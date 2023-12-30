@@ -19,13 +19,13 @@ add_subdirectory(src)
 
 add_library(
 	hashlib
-	lib/hash-library/sha1.cpp 
+	lib/hash-library/sha1.cpp
 	lib/hash-library/sha1.h
 )
 
 target_include_directories(
-	${PROJECT_NAME} 
-	PUBLIC 
+	${PROJECT_NAME}
+	PUBLIC
 	lib/
 )
 
@@ -43,12 +43,12 @@ elseif(GNU OR Clang)
 	set(GCC_CLANG_COMPILE_OPTIONS_DEBUG "-g;-O0")
 	set(GCC_CLANG_COMPILE_OPTIONS_RELEASE "-O3")
 
-	target_compile_options(${PROJECT_NAME} PUBLIC ${GCC_CLANG_COMPILE_OPTIONS})
-	target_compile_options(${PROJECT_NAME} PUBLIC $<CONFIG:Debug>:${GCC_CLANG_COMPILE_OPTIONS_DEBUG})
-	target_compile_options(${PROJECT_NAME} PUBLIC $<CONFIG:Release>:${GCC_CLANG_COMPILE_OPTIONS_RELEASE})
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS};${GCC_CLANG_COMPILE_OPTIONS}")
+	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG};${GCC_CLANG_COMPILE_OPTIONS_DEBUG}")
+	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE};${GCC_CLANG_COMPILE_OPTIONS_RELEASE}")
 
 	if (LINUX)
 		target_link_libraries(${PROJECT_NAME} pthreads)
 	endif()
-	
+
 endif()

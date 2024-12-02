@@ -3,8 +3,8 @@
 #include <vector>
 
 // to run specific sections of the code 
-#define PTR_BASICS       0
-#define STACK_HEAP       1
+#define PTR_BASICS       1
+#define STACK_HEAP       0
 #define POLYMORPHS       0
 #define VECTOR_PTR       0
 #define PTR_PASSING      0
@@ -304,8 +304,6 @@ int main()
 
 		for (auto& v : vecEntity) // has to be reference // auto& v
 			delete v;
-
-		vecEntity.clear();
 	}
 	
 #endif

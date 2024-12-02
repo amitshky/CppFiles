@@ -1,2 +1,2 @@
 #! /bin/sh
-cd build-linux/ ; make
+cmake --build build-linux

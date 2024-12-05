@@ -4,8 +4,8 @@ class Buffer {
 public:
 	// constructor
 	explicit Buffer(size_t bytes = 1)
-		: _data{ nullptr }, 
-		  _size { bytes } {
+		: _data{ nullptr },
+		_size{ bytes } {
 		_data = new int[bytes];
 		for (size_t i = 0; i < bytes; ++i) {
 			_data[i] = i;
@@ -23,7 +23,7 @@ public:
 	// copy constructor
 	Buffer(const Buffer& other)
 		: _data{ nullptr },
-		  _size{ other._size} {
+		_size{ other._size } {
 		if (this == &other)
 			return;
 
@@ -57,7 +57,7 @@ public:
 
 	// move constructor
 	Buffer(Buffer&& other) noexcept
-		: _data{nullptr}, _size{0} {
+		: _data{ nullptr }, _size{ 0 } {
 		if (this == &other)
 			return;
 
@@ -71,7 +71,7 @@ public:
 
 		std::cout << "Resources moved!\n";
 	}
-	
+
 	// move assignment operator
 	Buffer& operator=(Buffer&& other) noexcept {
 		// you can implement as in copy constructor or use std::move

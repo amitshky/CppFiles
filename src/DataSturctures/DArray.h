@@ -8,7 +8,7 @@ public:
 	DArray()
 		: _size{ 0 },
 		_capacity{ 2 },
-		_data{ static_cast<T*>(operator new[](_capacity * sizeof(T))) } { }
+		_data{ static_cast<T*>(::operator new(_capacity * sizeof(T))) } { }
 
 	~DArray() {
 		Clear();
@@ -21,7 +21,7 @@ public:
 
 	void PushBack(T&& val) {
 		ReAlloc();
-		_data[_size++] = std::move(val);
+		_data[_size++] = val;
 	}
 
 	template<typename... Args>
@@ -41,7 +41,7 @@ private:
 			return;
 
 		_capacity += 4;
-		T* temp = static_cast<T*>(operator new[](_capacity * sizeof(T)));
+		T* temp = static_cast<T*>(::operator new(_capacity * sizeof(T)));
 		for (size_t i = 0; i < _size; ++i) {
 			new(&temp[i]) T{ std::move(_data[i]) };
 		}
@@ -50,7 +50,7 @@ private:
 			_data[i].~T();
 		}
 
-		operator delete[](_data, _capacity * sizeof(T));
+		::operator delete(_data, _capacity * sizeof(T));
 		_data = temp;
 	}
 
@@ -62,7 +62,7 @@ private:
 		_size = 0;
 		_capacity = 0;
 
-		operator delete[](_data, _capacity * sizeof(T));
+		::operator delete(_data, _capacity * sizeof(T));
 		_data = nullptr;
 	}
 

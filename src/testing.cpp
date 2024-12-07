@@ -1,107 +1,92 @@
 #include <iostream>
 
-class Buffer {
+template<typename T>
+class DArray final {
 public:
-	// constructor
-	explicit Buffer(size_t bytes = 1)
-		: _data{ nullptr }, 
-		  _size { bytes } {
-		_data = new int[bytes];
-		for (size_t i = 0; i < bytes; ++i) {
-			_data[i] = i;
-		}
+	DArray() 
+		: _size{0},
+		  _capacity{2},
+		_data{ static_cast<T*>(operator new[](_capacity * sizeof(T))) } { }
+
+	~DArray() {
+		Clear();
 	}
 
-	// destructor
-	~Buffer() {
-		delete[] _data;
-		_data = nullptr;
-
-		std::cout << "Resources deleted!\n";
+	void PushBack(const T& val) {
+		ReAlloc();
+		_data[_size++] = val;
 	}
 
-	// copy constructor
-	Buffer(const Buffer& other)
-		: _data{ nullptr },
-		  _size{ other._size} {
-		if (this == &other)
-			return;
-
-		delete[] _data;
-
-		_data = new int[other._size];
-		_size = other._size;
-		for (size_t i = 0; i < other._size; ++i) {
-			_data[i] = other._data[i];
-		}
-
-		std::cout << "Resources copied!\n";
+	void PushBack(T&& val) {
+		ReAlloc();
+		_data[_size++] = val;
 	}
 
-	// copy assigment operator
-	Buffer& operator=(const Buffer& other) {
-		if (this == &other)
-			return *this;
-
-		delete[] _data;
-
-		_data = new int[other._size];
-		_size = other._size;
-		for (size_t i = 0; i < other._size; ++i) {
-			_data[i] = other._data[i];
-		}
-
-		std::cout << "Resources copied!\n";
-		return *this;
+	template<typename... Args>
+	void EmplaceBack(Args&&... args) {
+		ReAlloc();
+		new(&_data[_size++]) T{ std::forward<T>(args...) }; // placement new
 	}
 
-	// move constructor
-	Buffer(Buffer&& other) noexcept
-		: _data{nullptr}, _size{0} {
-		if (this == &other)
-			return;
+	[[nodiscard]] inline size_t Size() const { return _size; }
+	[[nodiscard]] inline size_t Capacity() const { return _capacity;  }
 
-		delete[] _data;
-
-		_data = other._data;
-		_size = other._size;
-
-		other._data = nullptr;
-		other._size = 0;
-
-		std::cout << "Resources moved!\n";
-	}
-	
-	// move assignment operator
-	Buffer& operator=(Buffer&& other) noexcept {
-		// you can implement as in copy constructor or use std::move
-		delete[] _data;
-		*this = std::move(other);
-
-		std::cout << "Resources moved!\n";
-	}
-
-	friend std::ostream& operator<<(std::ostream& stream, const Buffer& buffer);
+	[[nodiscard]] inline T& operator[](size_t i) { return _data[i]; }
 
 private:
-	int* _data;
+	void ReAlloc() {
+		if (_size >= _capacity)
+			return;
+
+		_capacity += 4;
+		T* temp = static_cast<T*>(operator new[](_capacity * sizeof(T)));
+		for (size_t i = 0; i < _size; ++i) {
+			new(&temp[i]) T{ std::move(_data[i]) };
+		}
+
+		for (size_t i = 0; i < _size; ++i) {
+			_data[i].~T();
+		}
+		operator delete[](_data, _capacity * sizeof(T);
+		_data = temp;
+	}
+
+	void Clear() {
+		for (size_t i = 0; i < _size; ++i) {
+			_data[i].~T();
+		}
+
+		_size = 0;
+		_capacity = 0;
+
+		operator delete[](_data, _capacity * sizeof(T);
+		_data = nullptr;
+	}
+
+private:
 	size_t _size;
+	size_t _capacity;
+	T* _data;
 };
 
-std::ostream& operator<<(std::ostream& stream, const Buffer& buffer) {
-	for (int i = 0; i < buffer._size; ++i) {
-		stream << buffer._data[i] << '\n';
-	}
-
-	return stream;
-}
-
 int main() {
-	{
-		Buffer buff{ 5 };
-		Buffer b{ buff };
-		Buffer b2{ std::move(buff) };
-		std::cout << b;
+	struct S {
+		int a = 5;
+
+		S(int val) : a(val) {}
+	};
+
+	DArray<S> a;
+
+	a.EmplaceBack(5);
+	a.EmplaceBack(4);
+	a.EmplaceBack(3);
+	a.EmplaceBack(2);
+	a.EmplaceBack(1);
+
+	for (size_t i = 0; i < a.Size(); ++i) {
+		std::cout << a[i].a << '\n';
 	}
+
 	std::cin.get();
 }

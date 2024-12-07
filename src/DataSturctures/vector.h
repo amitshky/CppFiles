@@ -103,7 +103,7 @@ public:
 	}
 
 	template<typename... Args>
-	// takes in arguments of the object begin stored 
+	// takes in arguments of the object being stored 
 	// creates tht object
 	// returns the created object
 	T& EmplaceBack(Args&&... args)
